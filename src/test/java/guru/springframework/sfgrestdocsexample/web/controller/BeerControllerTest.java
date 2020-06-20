@@ -24,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,20 +55,22 @@ class BeerControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("v1/beer",
                         pathParameters(
-                                parameterWithName("beerId").description("UUID of desired beer to get.")
-                        ), requestParameters(
-                                parameterWithName("iscold").description("is beer cold Query param")
-                        ), responseFields(
-                                fieldWithPath("id").description("id of beer"),
-                                fieldWithPath("version").description("version number"),
-                                fieldWithPath("createdDate").description("Date Created"),
-                                fieldWithPath("lastModifiedDate").description("Last modified date"),
-                                fieldWithPath("beerName").description("beer name"),
-                                fieldWithPath("beerStyle").description("beer style"),
-                                fieldWithPath("upc").description("UPC of beer"),
-                                fieldWithPath("price").description("price"),
-                                fieldWithPath("quantityOnHand").description("quantity on hand")
-                                )
+                            parameterWithName("beerId").description("UUID of desired beer to get.")
+                        ),
+                        requestParameters(
+                            parameterWithName("iscold").description("is beer cold Query param")
+                        ),
+                        responseFields(
+                            fieldWithPath("id").description("id of beer"),
+                            fieldWithPath("version").description("version number"),
+                            fieldWithPath("createdDate").description("Date Created"),
+                            fieldWithPath("lastModifiedDate").description("Last modified date"),
+                            fieldWithPath("beerName").description("beer name"),
+                            fieldWithPath("beerStyle").description("beer style"),
+                            fieldWithPath("upc").description("UPC of beer"),
+                            fieldWithPath("price").description("price"),
+                            fieldWithPath("quantityOnHand").description("quantity on hand")
+                            )
                 ));
     }
 
@@ -82,7 +83,18 @@ class BeerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
                 .andExpect(status().isCreated())
-                .andDo(document("/v1/beer/"));
+                .andDo(document("v1/beer/",
+                        requestFields(
+                                fieldWithPath("id").ignored(),
+                                fieldWithPath("version").ignored(),
+                                fieldWithPath("createdDate").ignored(),
+                                fieldWithPath("lastModifiedDate").ignored(),
+                                fieldWithPath("beerName").description("beer name"),
+                                fieldWithPath("beerStyle").description("beer style"),
+                                fieldWithPath("upc").description("UPC of beer"),
+                                fieldWithPath("price").description("price"),
+                                fieldWithPath("quantityOnHand").ignored()
+                        )));
     }
 
     @Test
