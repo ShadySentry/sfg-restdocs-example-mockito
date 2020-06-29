@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(RestDocumentationExtension.class)
-@AutoConfigureRestDocs
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.springframework.guru", uriPort = 80)
 @WebMvcTest(BeerController.class)
 @ComponentScan(basePackages = "guru.springframework.sfgrestdocsexample.web.mappers")
 class BeerControllerTest {
@@ -58,29 +58,28 @@ class BeerControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("v1/beer",
-                        pathParameters(
-                            parameterWithName("beerId").description("UUID of desired beer to get.")
+                        pathParameters (
+                                parameterWithName("beerId").description("UUID of desired beer to get.")
                         ),
                         requestParameters(
-                            parameterWithName("iscold").description("is beer cold Query param")
+                                parameterWithName("iscold").description("Is Beer Cold Query param")
                         ),
                         responseFields(
-                            fieldWithPath("id").description("id of beer"),
-                            fieldWithPath("version").description("version number"),
-                            fieldWithPath("createdDate").description("Date Created"),
-                            fieldWithPath("lastModifiedDate").description("Last modified date"),
-                            fieldWithPath("beerName").description("beer name"),
-                            fieldWithPath("beerStyle").description("beer style"),
-                            fieldWithPath("upc").description("UPC of beer"),
-                            fieldWithPath("price").description("price"),
-                            fieldWithPath("quantityOnHand").description("quantity on hand")
-                            )
-                ));
+                                fieldWithPath("id").description("Id of Beer"),
+                                fieldWithPath("version").description("Version number"),
+                                fieldWithPath("createdDate").description("Date Created"),
+                                fieldWithPath("lastModifiedDate").description("Date Updated"),
+                                fieldWithPath("beerName").description("Beer Name"),
+                                fieldWithPath("beerStyle").description("Beer Style"),
+                                fieldWithPath("upc").description("UPC of Beer"),
+                                fieldWithPath("price").description("Price"),
+                                fieldWithPath("quantityOnHand").description("Quantity On hand")
+                        )));
     }
 
     @Test
     void saveNewBeer() throws Exception {
-        BeerDto beerDto = getValidBeerDto();
+        BeerDto beerDto =  getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
         ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
@@ -89,23 +88,23 @@ class BeerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
                 .andExpect(status().isCreated())
-                .andDo(document("v1/beer/",
+                .andDo(document("v1/beer",
                         requestFields(
                                 fields.withPath("id").ignored(),
                                 fields.withPath("version").ignored(),
                                 fields.withPath("createdDate").ignored(),
                                 fields.withPath("lastModifiedDate").ignored(),
-                                fields.withPath("beerName").description("beer name"),
-                                fields.withPath("beerStyle").description("beer style"),
-                                fields.withPath("upc").description("UPC of beer"),
-                                fields.withPath("price").description("price"),
+                                fields.withPath("beerName").description("Name of the beer"),
+                                fields.withPath("beerStyle").description("Style of Beer"),
+                                fields.withPath("upc").description("Beer UPC").attributes(),
+                                fields.withPath("price").description("Beer Price"),
                                 fields.withPath("quantityOnHand").ignored()
                         )));
     }
 
     @Test
     void updateBeerById() throws Exception {
-        BeerDto beerDto = getValidBeerDto();
+        BeerDto beerDto =  getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
         mockMvc.perform(put("/api/v1/beer/" + UUID.randomUUID().toString())
@@ -114,7 +113,7 @@ class BeerControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    BeerDto getValidBeerDto() {
+    BeerDto getValidBeerDto(){
         return BeerDto.builder()
                 .beerName("Nice Ale")
                 .beerStyle(BeerStyleEnum.ALE)
