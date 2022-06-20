@@ -1,6 +1,6 @@
 # SFG Spring REST Docs Example
 
-This repository contains source code examples used to support my on-line courses about the Spring Framework.
+This repository contains source code examples used to support unit testing course.
 
 You can learn more about the courses here:
 * [Spring Framework 5: Beginner to Guru](https://www.udemy.com/course/spring-framework-5-beginner-to-guru/?couponCode=GITHUB_SFGPETCLINIC)
